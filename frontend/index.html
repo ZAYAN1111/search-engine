@@ -1,42 +1,162 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My Own Search Engine</title>
-  <meta charset="UTF-8">
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 800px; margin: 2rem auto; }
-    input { width: 70%; padding: 0.5rem; font-size: 1rem; }
-    button { padding: 0.5rem 1rem; font-size: 1rem; }
-    ul { list-style: none; padding-left: 0; }
-    li { margin-bottom: 1.5rem; }
-    li a { font-weight: bold; color: #1a0dab; text-decoration: none; }
-    li a:hover { text-decoration: underline; }
-    p { margin: 0.3rem 0 0; color: #545454; }
-    strong { color: #007700; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>My Own Search Engine</title>
+<style>
+  /* Reset & basic */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0; padding: 0;
+    background: #f9f9f9;
+    color: #202124;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  header {
+    padding: 2rem 1rem 1rem;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 2.5rem;
+    letter-spacing: -1px;
+  }
+  main {
+    flex: 1;
+    max-width: 720px;
+    margin: 2rem auto 4rem;
+    padding: 0 1rem;
+  }
+  .search-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  input[type="text"] {
+    width: 100%;
+    max-width: 600px;
+    font-size: 1.25rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #dfe1e5;
+    border-radius: 24px 0 0 24px;
+    outline: none;
+    transition: box-shadow 0.2s;
+  }
+  input[type="text"]:focus {
+    box-shadow: 0 0 6px #8ab4f8;
+    border-color: #8ab4f8;
+  }
+  button {
+    background-color: #1a73e8;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    padding: 0 1.5rem;
+    border-radius: 0 24px 24px 0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  button:hover {
+    background-color: #1669c1;
+  }
+  ul#results {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  ul#results li {
+    background: white;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.1);
+  }
+  ul#results li a {
+    text-decoration: none;
+    color: #1a0dab;
+    font-weight: 600;
+    font-size: 1.15rem;
+  }
+  ul#results li a:hover {
+    text-decoration: underline;
+  }
+  ul#results li p {
+    margin: 0.25rem 0 0;
+    color: #5f6368;
+    font-size: 0.9rem;
+  }
+  .source-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #4285f4;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+  }
+  footer {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.85rem;
+    color: #666;
+  }
+</style>
 </head>
 <body>
-  <h1>MyOwnSearchEngine.com</h1>
-  <input id="query" type="text" placeholder="Search anything...">
-  <button onclick="search()">Search</button>
-  <ul id="results"></ul>
 
-  <script>
-    async function search() {
-      const q = document.getElementById("query").value;
-      if (!q.trim()) return alert("Please enter a search query.");
-      const res = await fetch(`https://search-engine-8o2m.onrender.com/search?q=${encodeURIComponent(q)}`);
+<header>
+  <h1>MyOwnSearchEngine.com</h1>
+</header>
+
+<main>
+  <div class="search-box">
+    <input id="query" type="text" placeholder="Search anything..." onkeydown="if(event.key==='Enter'){search()}" />
+    <button onclick="search()">Search</button>
+  </div>
+  <ul id="results"></ul>
+</main>
+
+<footer>
+  &copy; 2025 Zayan. All rights reserved.
+</footer>
+
+<script>
+  const backendURL = "https://search-engine-8o2m.onrender.com"; // Replace with your Render URL
+
+  async function search() {
+    const q = document.getElementById("query").value.trim();
+    if (!q) return;
+    
+    const list = document.getElementById("results");
+    list.innerHTML = `<li>Searching for "<strong>${q}</strong>"...</li>`;
+
+    try {
+      const res = await fetch(`${backendURL}/search?q=${encodeURIComponent(q)}`);
+      if (!res.ok) throw new Error(`Error: ${res.status}`);
+
       const data = await res.json();
-      const list = document.getElementById("results");
-      if (!data.results.length) {
-        list.innerHTML = "<li>No results found.</li>";
+      if (data.results.length === 0) {
+        list.innerHTML = `<li>No results found for "<strong>${q}</strong>".</li>`;
         return;
       }
-      list.innerHTML = data.results.map(r =>
-        `<li><strong>[${r.source}]</strong> <a href='${r.url}' target='_blank' rel="noopener noreferrer">${r.title}</a><p>${r.snippet}</p></li>`
-      ).join("");
+
+      list.innerHTML = data.results.map(r => `
+        <li>
+          <span class="source-label">${r.source}</span>
+          <a href="${r.url}" target="_blank" rel="noopener noreferrer">${r.title}</a>
+          <p>${r.snippet}</p>
+        </li>
+      `).join('');
+    } catch(err) {
+      list.innerHTML = `<li>Error fetching results: ${err.message}</li>`;
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
-
