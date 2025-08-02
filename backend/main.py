@@ -9,10 +9,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://127.0.0.1:5500",  # default Live Server origin
-        "http://localhost:5500"  # also allow this just in case
-    ],
+    allow_origins=[https://search-engine-sand-one.vercel.app],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -25,3 +22,4 @@ def search_all(q: str):
     results.extend(search_youtube(q))
     results.extend(search_wikipedia(q))
     return {"query": q, "results": results}
+
