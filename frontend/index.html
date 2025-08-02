@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Own Search Engine</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 2rem auto; }
+    input { width: 70%; padding: 0.5rem; font-size: 1rem; }
+    button { padding: 0.5rem 1rem; font-size: 1rem; }
+    ul { list-style: none; padding-left: 0; }
+    li { margin-bottom: 1.5rem; }
+    li a { font-weight: bold; color: #1a0dab; text-decoration: none; }
+    li a:hover { text-decoration: underline; }
+    p { margin: 0.3rem 0 0; color: #545454; }
+    strong { color: #007700; }
+  </style>
+</head>
+<body>
+  <h1>MyOwnSearchEngine.com</h1>
+  <input id="query" type="text" placeholder="Search anything...">
+  <button onclick="search()">Search</button>
+  <ul id="results"></ul>
+
+  <script>
+    async function search() {
+      const q = document.getElementById("query").value;
+      if (!q.trim()) return alert("Please enter a search query.");
+      const res = await fetch(`http://localhost:8000/search?q=${encodeURIComponent(q)}`);
+      const data = await res.json();
+      const list = document.getElementById("results");
+      if (!data.results.length) {
+        list.innerHTML = "<li>No results found.</li>";
+        return;
+      }
+      list.innerHTML = data.results.map(r =>
+        `<li><strong>[${r.source}]</strong> <a href='${r.url}' target='_blank' rel="noopener noreferrer">${r.title}</a><p>${r.snippet}</p></li>`
+      ).join("");
+    }
+  </script>
+</body>
+</html>
