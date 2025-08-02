@@ -25,7 +25,7 @@
     async function search() {
       const q = document.getElementById("query").value;
       if (!q.trim()) return alert("Please enter a search query.");
-      const res = await fetch(`http://localhost:8000/search?q=${encodeURIComponent(q)}`);
+      const res = await fetch(`https://search-engine-8o2m.onrender.com/search?q=${encodeURIComponent(q)}`);
       const data = await res.json();
       const list = document.getElementById("results");
       if (!data.results.length) {
@@ -39,3 +39,4 @@
   </script>
 </body>
 </html>
+
