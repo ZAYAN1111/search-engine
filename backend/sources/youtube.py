@@ -9,7 +9,7 @@ def search_youtube(query):
         "key": YOUTUBE_API_KEY,
         "part": "snippet",
         "q": query,
-        "maxResults": 5,
+        "maxResults": 10,
         "type": "video"
     }
     try:
