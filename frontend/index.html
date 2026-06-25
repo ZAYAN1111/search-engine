@@ -1,225 +1,367 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Project Voyager</title>
+
 <style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f9f9f9;
-    color: #202124;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
 
-  header {
-    padding: 2rem 1rem 1rem;
-    text-align: center;
-    background: white;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
-  }
+:root{
+    --bg:#f5f5f5;
+    --card:#ffffff;
+    --text:#202124;
+    --secondary:#5f6368;
+    --border:#e0e0e0;
+    --button:#1a73e8;
+    --button-hover:#1669c1;
+}
 
-  header h1 {
-    margin: 0;
-    font-weight: 700;
-    font-size: 2.5rem;
-    letter-spacing: -1px;
-  }
+@media (prefers-color-scheme: dark){
 
-  main {
-    flex: 1;
-    max-width: 720px;
-    margin: 2rem auto 4rem;
-    padding: 0 1rem;
-  }
+    :root{
+        --bg:#121212;
+        --card:#1e1e1e;
+        --text:#e8eaed;
+        --secondary:#9aa0a6;
+        --border:#333;
+        --button:#4285f4;
+        --button-hover:#5a95f5;
+    }
 
-  .search-box {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
-  }
+}
 
-  input[type="text"] {
-    width: 100%;
-    max-width: 600px;
-    font-size: 1.25rem;
-    padding: 0.75rem 1rem;
-    border: 1px solid #dfe1e5;
-    border-radius: 24px 0 0 24px;
-    outline: none;
-    transition: box-shadow 0.2s;
-  }
+body{
+    margin:0;
+    padding:0;
+    min-height:100vh;
 
-  input[type="text"]:focus {
-    box-shadow: 0 0 6px #8ab4f8;
-    border-color: #8ab4f8;
-  }
+    background:var(--bg);
+    color:var(--text);
 
-  button {
-    background-color: #1a73e8;
-    border: none;
-    color: white;
-    font-size: 1.25rem;
-    padding: 0 1.5rem;
-    border-radius: 0 24px 24px 0;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
 
-  button:hover {
-    background-color: #1669c1;
-  }
+    display:flex;
+    flex-direction:column;
+}
 
-  ul#results {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
+header{
+    background:var(--card);
+    text-align:center;
+    padding:2rem 1rem;
 
-  ul#results li {
-    background: white;
-    padding: 1rem 1.5rem;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 1px 4px rgb(0 0 0 / 0.1);
-  }
+    box-shadow:0 2px 4px rgba(0,0,0,.1);
+}
 
-  ul#results li a {
-    text-decoration: none;
-    color: #1a0dab;
-    font-weight: 600;
-    font-size: 1.15rem;
-  }
+header h1{
+    margin:0;
+    font-size:2.5rem;
+}
 
-  ul#results li a:hover {
-    text-decoration: underline;
-  }
+main{
+    flex:1;
+    max-width:900px;
+    width:100%;
 
-  ul#results li p {
-    margin: 0.25rem 0 0;
-    color: #5f6368;
-    font-size: 0.9rem;
-  }
+    margin:2rem auto;
+    padding:0 1rem;
+}
 
-  .source-label {
-    display: inline-block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #4285f4;
-    margin-bottom: 0.25rem;
-    text-transform: uppercase;
-  }
+.search-box{
+    display:flex;
+    margin-bottom:1.5rem;
+}
 
-  footer {
-    text-align: center;
-    padding: 1rem;
-    font-size: 0.85rem;
-    color: #666;
-  }
+#query{
+    flex:1;
+
+    padding:.9rem 1rem;
+    font-size:1.1rem;
+
+    border:1px solid var(--border);
+    border-radius:24px 0 0 24px;
+
+    background:var(--card);
+    color:var(--text);
+}
+
+#query:focus{
+    outline:none;
+}
+
+button{
+    border:none;
+
+    background:var(--button);
+    color:white;
+
+    padding:0 1.5rem;
+
+    font-size:1.1rem;
+
+    cursor:pointer;
+
+    border-radius:0 24px 24px 0;
+}
+
+button:hover{
+    background:var(--button-hover);
+}
+
+#resultCount{
+    margin-bottom:1rem;
+    color:var(--secondary);
+}
+
+#results{
+    list-style:none;
+    padding:0;
+}
+
+#results li{
+    background:var(--card);
+
+    padding:1rem;
+
+    margin-bottom:1rem;
+
+    border-radius:12px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+    transition:transform .15s ease;
+}
+
+#results li:hover{
+    transform:translateY(-2px);
+}
+
+.youtube-result{
+    border-left:5px solid #ff0000;
+}
+
+.wikipedia-result{
+    border-left:5px solid #4285f4;
+}
+
+.source-label{
+    display:inline-block;
+
+    margin-bottom:.5rem;
+
+    font-size:.75rem;
+    font-weight:bold;
+    text-transform:uppercase;
+}
+
+.thumbnail{
+    width:320px;
+    max-width:100%;
+
+    display:block;
+
+    border-radius:12px;
+
+    margin-bottom:12px;
+}
+
+.result-title{
+    text-decoration:none;
+
+    color:#4285f4;
+
+    font-size:1.1rem;
+    font-weight:600;
+}
+
+.result-title:hover{
+    text-decoration:underline;
+}
+
+.snippet{
+    margin-top:.5rem;
+    color:var(--secondary);
+}
+
+footer{
+    text-align:center;
+    padding:1rem;
+    color:var(--secondary);
+}
+
 </style>
+
 </head>
 <body>
 
 <header>
-  <h1>Project Voyager</h1>
+    <h1>Project Voyager</h1>
 </header>
 
 <main>
-  <div class="search-box">
-    <input
-      id="query"
-      type="text"
-      placeholder="Search anything..."
-      onkeydown="if(event.key==='Enter'){search()}"
-    />
-    <button onclick="search()">Search</button>
-  </div>
 
-  <ul id="results"></ul>
+```
+<div class="search-box">
+
+    <input
+        id="query"
+        type="text"
+        placeholder="Search anything..."
+        onkeydown="if(event.key==='Enter')search()"
+    >
+
+    <button onclick="search()">
+        Search
+    </button>
+
+</div>
+
+<div id="resultCount"></div>
+
+<ul id="results"></ul>
+```
+
 </main>
 
 <footer>
-  &copy; 2025 Zayan. All rights reserved.
+    © 2025 Zayan
 </footer>
 
 <script>
-  const backendURL = "https://search-engine-8o2m.onrender.com";
 
-  async function search() {
-    const q = document.getElementById("query").value.trim();
+const backendURL =
+    "https://search-engine-8o2m.onrender.com";
 
-    if (!q) return;
+async function search(){
 
-    const list = document.getElementById("results");
+    const q =
+        document.getElementById("query")
+        .value
+        .trim();
+
+    if(!q) return;
+
+    document.title =
+        q + " - Project Voyager";
+
+    window.history.replaceState(
+        {},
+        "",
+        "?q=" + encodeURIComponent(q)
+    );
+
+    const list =
+        document.getElementById("results");
+
+    const count =
+        document.getElementById("resultCount");
 
     list.innerHTML =
-      `<li>Searching for "<strong>${q}</strong>"...</li>`;
+        "<li>Searching...</li>";
 
-    try {
-      const res =
-        await fetch(
-          `${backendURL}/search?q=${encodeURIComponent(q)}`
-        );
+    try{
 
-      if (!res.ok) {
-        throw new Error(`Error: ${res.status}`);
-      }
+        const res =
+            await fetch(
+                `${backendURL}/search?q=${encodeURIComponent(q)}`
+            );
 
-      const data = await res.json();
+        if(!res.ok){
+            throw new Error(
+                "HTTP " + res.status
+            );
+        }
 
-      if (data.results.length === 0) {
+        const data =
+            await res.json();
+
+        count.textContent =
+            `${data.results.length} results found`;
+
+        if(data.results.length === 0){
+
+            list.innerHTML =
+                "<li>No results found.</li>";
+
+            return;
+        }
+
         list.innerHTML =
-          `<li>No results found for "<strong>${q}</strong>".</li>`;
-        return;
-      }
+            data.results.map(r => `
 
-      list.innerHTML = data.results.map(r => `
-  <li>
-    <span class="source-label">${r.source}</span>
+<li class="${
+    r.source === "YouTube"
+    ? "youtube-result"
+    : "wikipedia-result"
+}">
 
-    ${r.thumbnail ? `
-      <img
-        src="${r.thumbnail}"
-        alt="${r.title}"
-        style="
-          width:240px;
-          max-width:100%;
-          border-radius:8px;
-          display:block;
-          margin-bottom:10px;
-        "
-      >
-    ` : ''}
+<span class="source-label">
+${r.source}
+</span>
 
-    <a href="${r.url}"
-       target="_blank"
-       rel="noopener noreferrer">
-      ${r.title}
-    </a>
+${r.thumbnail ? `
 
-    <p>${r.snippet}</p>
-  </li>
-`).join('');
+<a href="${r.url}"
+   target="_blank"
+   rel="noopener noreferrer">
 
-    } catch(err) {
+<img
+class="thumbnail"
+src="${r.thumbnail}"
+alt="${r.title}"
+>
 
-      list.innerHTML =
-        `<li>Error fetching results: ${err.message}</li>`;
+</a>
+
+` : ""}
+
+<a
+class="result-title"
+href="${r.url}"
+target="_blank"
+rel="noopener noreferrer">
+
+${r.title}
+
+</a>
+
+<div class="snippet">
+${r.snippet || ""}
+</div>
+
+</li>
+
+`).join("");
+
     }
-  }
+    catch(err){
 
-  // Auto-search when arriving with ?q=something
-  const params = new URLSearchParams(window.location.search);
-  const q = params.get("q");
+        count.textContent = "";
 
-  if (q) {
-    document.getElementById("query").value = q;
+        list.innerHTML =
+            `<li>Error: ${err.message}</li>`;
+    }
+}
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const q =
+    params.get("q");
+
+if(q){
+
+    document
+        .getElementById("query")
+        .value = q;
+
     search();
-  }
+}
+
 </script>
 
 </body>
