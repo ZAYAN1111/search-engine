@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from backend.sources.google import search_google
 from backend.sources.youtube import search_youtube
@@ -7,36 +7,34 @@ from backend.sources.wikipedia import search_wikipedia
 
 app = FastAPI()
 
-@app.get("/search", response_class=HTMLResponse)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/search")
 def search_all(q: str):
-
     results = []
-    results.extend(search_google(q))
-    results.extend(search_youtube(q))
-    results.extend(search_wikipedia(q))
 
-    html = f"""
-    <html>
-    <head>
-        <title>Results for {q}</title>
-    </head>
-    <body>
-        <h1>Results for: {q}</h1>
-    """
+    try:
+        results.extend(search_google(q))
+    except Exception as e:
+        print("Google error:", e)
 
-    for result in results:
-        html += f"""
-        <div style="margin-bottom:20px;">
-            <a href="{result['url']}">
-                <h3>{result['title']}</h3>
-            </a>
-            <p>{result.get('snippet','')}</p>
-        </div>
-        """
+    try:
+        results.extend(search_youtube(q))
+    except Exception as e:
+        print("YouTube error:", e)
 
-    html += """
-    </body>
-    </html>
-    """
+    try:
+        results.extend(search_wikipedia(q))
+    except Exception as e:
+        print("Wikipedia error:", e)
 
-    return html
+    return {
+        "query": q,
+        "results": results
+    }
