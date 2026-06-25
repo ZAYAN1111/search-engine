@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.sources.google import search_google
-from backend.sources.youtube import search_youtube
 from backend.sources.wikipedia import search_wikipedia
 
 app = FastAPI()
@@ -15,17 +13,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/search")
-def search_all(q: str):
+
+@app.get("/")
+def home():
     return {
-        "query": q,
-        "results": [
-            {
-                "source": "TEST",
-                "title": "HELLO",
-                "url": "https://example.com",
-                "snippet": "Render is using the latest code."
-            }
-        ]
+        "status": "online",
+        "service": "Project Voyager"
     }
 
+
+@app.get("/search")
+def search(q: str):
+
+    results = search_wikipedia(q)
+
+    return {
+        "query": q,
+        "count": len(results),
+        "results": results
+    }
