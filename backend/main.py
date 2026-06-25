@@ -17,8 +17,15 @@ app.add_middleware(
 
 @app.get("/search")
 def search_all(q: str):
-    results = []
-    results.extend(search_wikipedia(q))
-    return {"query": q, "results": results}
-
+    return {
+        "query": q,
+        "results": [
+            {
+                "source": "TEST",
+                "title": "HELLO",
+                "url": "https://example.com",
+                "snippet": "Render is using the latest code."
+            }
+        ]
+    }
 
