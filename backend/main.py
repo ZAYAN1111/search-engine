@@ -18,8 +18,6 @@ app.add_middleware(
 @app.get("/search")
 def search_all(q: str):
     results = []
-    results.extend(search_google(q))
-    results.extend(search_youtube(q))
     results.extend(search_wikipedia(q))
     return {"query": q, "results": results}
 
