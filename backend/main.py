@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.sources.wikipedia import search_wikipedia
+from backend.sources.youtube import search_youtube
 
 app = FastAPI()
 
@@ -25,7 +26,21 @@ def home():
 @app.get("/search")
 def search(q: str):
 
-    results = search_wikipedia(q)
+    wiki_results = search_wikipedia(q)
+    youtube_results = search_youtube(q)
+
+    results = []
+
+    # Alternate Wikipedia and YouTube results
+    max_len = max(len(wiki_results), len(youtube_results))
+
+    for i in range(max_len):
+
+        if i < len(wiki_results):
+            results.append(wiki_results[i])
+
+        if i < len(youtube_results):
+            results.append(youtube_results[i])
 
     return {
         "query": q,
