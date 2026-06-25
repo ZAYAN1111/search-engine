@@ -7,7 +7,7 @@ def search_wikipedia(query):
         "list": "search",
         "srsearch": query,
         "format": "json",
-        "srlimit": 5
+        "srlimit": 10
     }
     try:
         response = requests.get(url, params=params)
