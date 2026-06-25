@@ -10,7 +10,7 @@ def search_google(query):
         "key": GOOGLE_API_KEY,
         "cx": GOOGLE_CSE_ID,
         "q": query,
-        "num": 5
+        "num": 20
     }
     try:
         response = requests.get(url, params=params)
