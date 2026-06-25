@@ -177,18 +177,33 @@
         return;
       }
 
-      list.innerHTML =
-        data.results.map(r => `
-          <li>
-            <span class="source-label">${r.source}</span>
-            <a href="${r.url}"
-               target="_blank"
-               rel="noopener noreferrer">
-              ${r.title}
-            </a>
-            <p>${r.snippet}</p>
-          </li>
-        `).join('');
+      list.innerHTML = data.results.map(r => `
+  <li>
+    <span class="source-label">${r.source}</span>
+
+    ${r.thumbnail ? `
+      <img
+        src="${r.thumbnail}"
+        alt="${r.title}"
+        style="
+          width:240px;
+          max-width:100%;
+          border-radius:8px;
+          display:block;
+          margin-bottom:10px;
+        "
+      >
+    ` : ''}
+
+    <a href="${r.url}"
+       target="_blank"
+       rel="noopener noreferrer">
+      ${r.title}
+    </a>
+
+    <p>${r.snippet}</p>
+  </li>
+`).join('');
 
     } catch(err) {
 
