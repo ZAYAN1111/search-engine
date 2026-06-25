@@ -18,23 +18,9 @@ app.add_middleware(
 @app.get("/search")
 def search_all(q: str):
     results = []
+    results.extend(search_google(q))
+    results.extend(search_youtube(q))
+    results.extend(search_wikipedia(q))
+    return {"query": q, "results": results}
 
-    try:
-        results.extend(search_google(q))
-    except Exception as e:
-        print("Google error:", e)
 
-    try:
-        results.extend(search_youtube(q))
-    except Exception as e:
-        print("YouTube error:", e)
-
-    try:
-        results.extend(search_wikipedia(q))
-    except Exception as e:
-        print("Wikipedia error:", e)
-
-    return {
-        "query": q,
-        "results": results
-    }
